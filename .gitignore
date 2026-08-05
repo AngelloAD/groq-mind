@@ -1,0 +1,7 @@
+# Dependencias y compilaciones de ambas carpetas
+**/node_modules/
+**/dist/
+**/.env
+
+# Archivos del sistema
+.DS_Store
