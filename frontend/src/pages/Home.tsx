@@ -46,7 +46,7 @@ const Home = () => {
                             <Link to="/register" className="btn-primary text-base px-8 py-3.5 shadow-md shadow-indigo-100">
                                 Comenzar ahora gratis
                             </Link>
-                            <Link to="/login" className="btn-secondary text-base px-8 py-3.5 border border-slate-200 bg-white">
+                            <Link to="/login" className="btn-secondary text-base px-8 py-3.5 shadow-md shadow-indigo-100">
                                 Iniciar sesión
                             </Link>
                         </div>
