@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
 import API from '../services/api'; // Importamos la instancia de Axios con interceptores
 
 // 1. Definimos la estructura de un mensaje del chat
