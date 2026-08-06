@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
+import API from '../services/api'; // Importamos la instancia de Axios con interceptores
 
 // 1. Definimos la estructura de un mensaje del chat
 interface Message {
@@ -54,19 +55,11 @@ const Chat = () => {
     setIsTyping(true);
 
     try {
-      // NOTA: Ajusta la URL base según la configuración de tu axios o entorno
-      // El backend requiere el token debido al @UseGuards(AuthGuard)
-      const token = localStorage.getItem('token'); 
-      
-      const response = await axios.post(
-        'http://localhost:3000/ia/preguntar', 
-        { prompt: userPrompt },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }
-        }
-      );
+      // Usamos la instancia 'API' que ya tiene configurada la ruta relativa '/api' y pone el token solo
+      const response = await API.post('/ia/preguntar', {
+        prompt: userPrompt
+      });
+
 
       // El servicio de NestJS retorna directamente el string con la respuesta
       const aiReply: Message = {
@@ -79,7 +72,7 @@ const Chat = () => {
       setMessages((prev) => [...prev, aiReply]);
     } catch (error) {
       console.error('Error al conectar con el módulo de IA:', error);
-      
+
       const errorMessage: Message = {
         id: crypto.randomUUID(),
         sender: 'ai',
@@ -104,7 +97,7 @@ const Chat = () => {
     <div className="max-w-4xl mx-auto px-4 py-6 h-[calc(100vh-140px)] flex flex-col">
       {/* Contenedor Principal del Chat */}
       <div className="flex-1 card border border-slate-200/70 shadow-soft overflow-hidden flex flex-col bg-white">
-        
+
         {/* Encabezado del panel de Chat */}
         <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -126,19 +119,17 @@ const Chat = () => {
               className={`flex gap-3 max-w-[85%] ${msg.sender === 'user' ? 'ml-auto flex-row-reverse' : 'mr-auto'}`}
             >
               {/* Avatar */}
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs shrink-0 select-none ${
-                msg.sender === 'user' ? 'bg-indigo-600 text-white' : 'bg-slate-100 border border-slate-200 text-slate-700'
-              }`}>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs shrink-0 select-none ${msg.sender === 'user' ? 'bg-indigo-600 text-white' : 'bg-slate-100 border border-slate-200 text-slate-700'
+                }`}>
                 {msg.sender === 'user' ? '👤' : '🧠'}
               </div>
 
               {/* Burbuja de Texto */}
               <div>
-                <div className={`p-4 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
-                  msg.sender === 'user' 
-                    ? 'bg-indigo-600 text-white rounded-tr-none shadow-xs' 
+                <div className={`p-4 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${msg.sender === 'user'
+                    ? 'bg-indigo-600 text-white rounded-tr-none shadow-xs'
                     : 'bg-slate-50 text-slate-800 rounded-tl-none border border-slate-100'
-                }`}>
+                  }`}>
                   {msg.text}
                 </div>
                 {/* Timestamp sutil */}
